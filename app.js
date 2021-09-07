@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const app = express();
@@ -7,6 +8,7 @@ const port = process.env.PORT || 1337;
 const database = require("./db/database");
 
 app.use(cors());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
@@ -30,6 +32,24 @@ app.get("/", async (req, res) => {
     };
 
     res.json(data);
+});
+
+// Add a route
+app.post("/save", async (req, res) => {
+    const db = await database.getDb();
+    
+    const doc = {
+        name: req.body.name,
+        html: req.body.html,
+    };
+    
+    const result = await db.collection.insertOne(doc);
+
+    if (result.acknowledged) {
+        return res.status(201).json({ data: result.ops });
+    }
+
+    await db.client.close();
 });
 
 app.use(express.json());
