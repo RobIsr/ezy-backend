@@ -4,6 +4,8 @@ const morgan = require('morgan');
 const app = express();
 const port = process.env.PORT || 1337;
 
+const database = require("./db/database");
+
 app.use(cors());
 
 // don't show the log when it is test
@@ -13,7 +15,14 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 // Add a route
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+    const db = await database.getDb();
+    const resultSet = await db.collection.find({}).toArray();
+
+    console.log(resultSet);
+
+    await db.client.close();
+
     const data = {
         data: {
             msg: "Hello from ezy-api"
