@@ -5,6 +5,10 @@ const morgan = require('morgan');
 const app = express();
 const port = process.env.PORT || 1337;
 
+//Routes
+const save = require('./routes/save');
+const allDocs = require('./routes/alldocs');
+
 const database = require("./db/database");
 
 app.use(cors());
@@ -16,14 +20,11 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
 }
 
+app.use('/save', save);
+app.use('/allDocs', allDocs);
+
 // Add a route
 app.get("/", async (req, res) => {
-    const db = await database.getDb();
-    const resultSet = await db.collection.find({}).toArray();
-
-    console.log(resultSet);
-
-    await db.client.close();
 
     const data = {
         data: {
@@ -32,24 +33,6 @@ app.get("/", async (req, res) => {
     };
 
     res.json(data);
-});
-
-// Add a route
-app.post("/save", async (req, res) => {
-    const db = await database.getDb();
-    
-    const doc = {
-        name: req.body.name,
-        html: req.body.html,
-    };
-    
-    const result = await db.collection.insertOne(doc);
-
-    if (result.acknowledged) {
-        return res.status(201).json({ data: result.ops });
-    }
-
-    await db.client.close();
 });
 
 app.use(express.json());
