@@ -12,7 +12,7 @@ const allDocs = require('./routes/alldocs');
 const database = require("./db/database");
 
 app.use(cors());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {

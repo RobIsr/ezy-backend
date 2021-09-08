@@ -6,6 +6,7 @@ router.post('/', async function(req, res, next) {
     const db = await database.getDb();
     
     const doc = {
+        type: "documents",
         name: req.body.name,
         html: req.body.html,
     };
