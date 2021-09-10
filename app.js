@@ -7,12 +7,14 @@ const port = process.env.PORT || 1337;
 
 //Routes
 const save = require('./routes/save');
+const update = require('./routes/update');
 const allDocs = require('./routes/alldocs');
 
 const database = require("./db/database");
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 // don't show the log when it is test
 if (process.env.NODE_ENV !== 'test') {
@@ -22,6 +24,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use('/save', save);
 app.use('/allDocs', allDocs);
+app.use('/update', update);
 
 // Add a route
 app.get("/", async (req, res) => {
