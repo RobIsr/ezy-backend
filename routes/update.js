@@ -21,7 +21,7 @@ router.put('/', async function(req, res) {
             `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`,
         );
         if (result.acknowledged) {
-            return res.status(201).json({ data: result.ops });
+            return res.status(200).json({ data: result.ops });
         }
     } catch(error) {
         return res.status(500).json({
