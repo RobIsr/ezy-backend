@@ -13,6 +13,8 @@ brew install mongodb-community@5.0
 
 This is a prerequisite for running local instances of mongodb.
 
+----
+
 ## Installation using docker
 
 ### To run with local mongodb instance:
@@ -38,6 +40,8 @@ You can now run the express server connected to mongodb Atlas with:
 ````
 docker-compose --env-file ./.env.prod up express
 ````
+
+----
 
 ## Installation without Docker
 
@@ -79,6 +83,8 @@ Run the express server connected to mongodb Atlas with:
 npm run production
 ````
 
+----
+
 ## API Routes
 
 ````
@@ -107,6 +113,8 @@ Example result:
 }
 ````
 
+----
+
 ````
 POST /save
 ````
@@ -123,6 +131,8 @@ Result:
 ````
 HTTP Status Code 201 Created
 ````
+
+----
 
 ````
 PUT /update
@@ -141,9 +151,3 @@ Result:
 ````
 HTTP Status Code 200 Ok
 ````
-
-
-
-
-
-
