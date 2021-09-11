@@ -7,7 +7,7 @@ const collectionName = "documents";
 const database = {
     getDb: async function getDb () {
         // DSN for mongo db.
-        let dsn = `mongodb+srv://${config.username}:${config.password}@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+        let dsn = process.env.DBWEBB_DSN || `mongodb+srv://${config.username}:${config.password}@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
         // DSN for running tests.
         if (process.env.NODE_ENV === 'test') {

@@ -6,9 +6,9 @@ const app = express();
 const port = process.env.PORT || 1337;
 
 //Routes
-const save = require('./routes/save');
-const update = require('./routes/update');
-const allDocs = require('./routes/alldocs');
+const save = require('../routes/save');
+const update = require('../routes/update');
+const allDocs = require('../routes/alldocs');
 
 app.use(cors());
 app.use(bodyParser.json());
