@@ -15,6 +15,24 @@ This is a prerequisite for running local instances of mongodb.
 
 ----
 
+Create a config file for mongodb Atlas with the login-credentials in:
+
+````
+db/config.json
+````
+
+This file shold be formatted as follows:
+````
+{
+    "username": "<mongodb-username>",
+    "password": "<mongodb-passwor>"
+}
+````
+
+Note that this file has to be created even if you plan on only running a local instance of mongodb. If this is the case just create the file and paste the above content in it. You only need to provide login details if you plan to connect to own mongodb Atlas account.
+
+----
+
 ## Installation using docker
 
 ### To run with local mongodb instance:
@@ -60,20 +78,6 @@ npm run start
 ````
 
 ### To run with connected mongodb Atlas account:
-
-Create a config file for mongodb Atlas with the login-credentials in:
-
-````
-db/config.json
-````
-
-This file shold be formatted as follows:
-````
-{
-    "username": "<mongodb-username",
-    "password": "<mongodb-passwor>"
-}
-````
 
 Make sure that you have the correct authentication details in the config.json that you created.
 

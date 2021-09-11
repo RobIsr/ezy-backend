@@ -1,30 +1,22 @@
 "use strict";
 
 const mongo = require("mongodb").MongoClient;
-
-let dsn = "";
-
-if (process.env.NODE_ENV === "production") {
-    const config = require("./config.json");
-    dsn = `mongodb+srv://${config.username}:${config.password}@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-}
+const config = require("./config.json");
 
 const collectionName = "documents";
 
 const database = {
     getDb: async function getDb () {
+        let dsn = `mongodb+srv://${config.username}:${config.password}@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
         if (process.env.DOCKER) {
             // DSN for mongo db in docker.
             dsn = process.env.DBWEBB_DSN;
-        }
-
-        if (process.env.NODE_ENV === "local") {
+        } else if (process.env.NODE_ENV === "local") {
+            // DSN for mongo without docker.
             dsn = "mongodb://localhost:27017/documents";
-        }
-        
-        // DSN for running tests.
-        if (process.env.NODE_ENV === 'test') {
+        } else if (process.env.NODE_ENV === 'test') {
+            // DSN for mongo when running tests.
             dsn = "mongodb://localhost:27017/test";
         }
 
