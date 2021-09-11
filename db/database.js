@@ -1,24 +1,31 @@
 "use strict";
 
 const mongo = require("mongodb").MongoClient;
-if(!process.env.DOCKER && process.env.NODE_ENV === "production") {
+
+let dsn = "";
+
+if (process.env.NODE_ENV === "production") {
     const config = require("./config.json");
+    dsn = `mongodb+srv://${config.username}:${config.password}@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 }
+
 const collectionName = "documents";
 
 const database = {
     getDb: async function getDb () {
-        // DSN for mongo db local instance.
-        let dsn = process.env.DBWEBB_DSN || "mongodb://localhost:27017/documents";
-        console.log("DSN: " , dsn);
+
+        if (process.env.DOCKER) {
+            // DSN for mongo db in docker.
+            dsn = process.env.DBWEBB_DSN;
+        }
+
+        if (process.env.NODE_ENV === "local") {
+            dsn = "mongodb://localhost:27017/documents";
+        }
+        
         // DSN for running tests.
         if (process.env.NODE_ENV === 'test') {
             dsn = "mongodb://localhost:27017/test";
-        }
-
-        //DSN for running instance of mongodb connected to Atlas
-        if (process.env.NODE_ENV === 'production') {
-            dsn = `mongodb+srv://${config.username}:${config.password}@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
         }
 
         // Configure connection to mongodb.
