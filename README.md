@@ -25,7 +25,7 @@ This file shold be formatted as follows:
 ````
 {
     "username": "<mongodb-username>",
-    "password": "<mongodb-passwor>"
+    "password": "<mongodb-password>"
 }
 ````
 
@@ -74,7 +74,7 @@ npm install
 Run the express server connected to local mongodb instance with:
 
 ````
-npm run start
+npm start
 ````
 
 ### To run with connected mongodb Atlas account:
