@@ -33,6 +33,22 @@ Firt install dependencies with:
 npm install
 ````
 
+#### To run with local mongodb instance:
+
+Firt install dependencies with:
+
+````
+npm install
+````
+
+Then run the express server connected to mongodb with:
+
+````
+npm run start-local
+````
+
+#### To run with connected mongodb account:
+
 Create a config file for mongodb in:
 
 ````
@@ -52,6 +68,3 @@ Then run the express server connected to mongodb with:
 ````
 npm start
 ````
-
-
-

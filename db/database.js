@@ -14,6 +14,11 @@ const database = {
             dsn = "mongodb://localhost:27017/test";
         }
 
+        // DSN for running tests.
+        if (process.env.NODE_ENV === 'local') {
+            dsn = "mongodb://localhost:27017/documents";
+        }
+
         // Configure connection to mongodb.
         const client  = await mongo.connect(dsn, {
             useNewUrlParser: true,
