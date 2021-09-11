@@ -10,8 +10,6 @@ const save = require('./routes/save');
 const update = require('./routes/update');
 const allDocs = require('./routes/alldocs');
 
-const database = require("./db/database");
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
