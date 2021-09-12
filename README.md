@@ -71,10 +71,10 @@ npm install
 
 ### To run with local mongodb instance:
 
-Run the express server connected to local mongodb instance with:
+Run the express server connected to local mongodb instance set node eviornment variable to 'local' with:
 
 ````
-npm start
+NODE_ENV=local npm start
 ````
 
 ### To run with connected mongodb Atlas account:
@@ -84,7 +84,7 @@ Make sure that you have the correct authentication details in the config.json th
 Run the express server connected to mongodb Atlas with:
 
 ````
-npm run production
+npm start
 ````
 
 ----
