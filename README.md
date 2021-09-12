@@ -51,7 +51,7 @@ Create a new file ``` .env.production ``` in the root directory with the followi
 DSN=<YOUR CONNECTION STRING FROM ATLAS>
 ````
 
-Where "YOUR CONNECTION STRING FROM ATLAS" is the authentication string generated in your Atlas account.
+Where "YOUR CONNECTION STRING FROM ATLAS" is the authentication string generated in your Atlas account containing your username and password.
 
 You can now run the express server connected to mongodb Atlas with:
 
