@@ -26,7 +26,6 @@ app.use('/update', update);
 
 // Add a route
 app.get("/", async (req, res) => {
-
     const data = {
         data: {
             msg: "Hello from ezy-api"
@@ -40,6 +39,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
     var err = new Error("Not Found");
+
     err.status = 404;
     next(err);
 });
@@ -63,4 +63,4 @@ app.use((err, req, res, next) => {
 // Start up server
 const server = app.listen(port, () => console.log(`Example API listening on port ${port}!`));
 
-export default { server };
+module.exports = server;

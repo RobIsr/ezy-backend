@@ -7,8 +7,8 @@ const database = require("../db/database");
 
 router.put('/', async function(req, res) {
     const db = await database.getDb();
-    try {
 
+    try {
         // Filter to search find the document requested by id.
         const filter = { _id: ObjectId(req.body._id) };
         // this option instructs the method to create a document if no documents match the filter
@@ -28,15 +28,14 @@ router.put('/', async function(req, res) {
         if (result.acknowledged) {
             return res.status(200).json({ data: result.ops });
         }
-
-    } catch(error) {
+    } catch (error) {
         // Send database error specifying the route concerned.
         return res.status(500).json({
             errors: {
                 status: 500,
                 source: "/update",
                 title: "Database error",
-                detail: e.message
+                detail: error.message
             }
         });
     } finally {
