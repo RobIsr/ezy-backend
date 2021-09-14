@@ -3,11 +3,9 @@
 const { ObjectId } = require('bson');
 var express = require('express');
 var router = express.Router();
-const database = require("../db/database");
+const queries = require('../db/queries');
 
 router.put('/', async function(req, res) {
-    const db = await database.getDb();
-
     try {
         // Filter to search find the document requested by id.
         const filter = { _id: ObjectId(req.body._id) };
@@ -22,11 +20,11 @@ router.put('/', async function(req, res) {
         };
 
         // Find the document and update its data.
-        const result = await db.collection.updateOne(filter, updateDoc, options);
+        const result = await queries.update(filter, updateDoc, options);
 
         //Check for successful update operation and return status 200.
         if (result.acknowledged) {
-            return res.status(200).json({ data: result.ops });
+            return res.status(200).json({ data: result });
         }
     } catch (error) {
         // Send database error specifying the route concerned.
@@ -38,9 +36,6 @@ router.put('/', async function(req, res) {
                 detail: error.message
             }
         });
-    } finally {
-        //Close database.
-        await db.client.close();
     }
 });
 

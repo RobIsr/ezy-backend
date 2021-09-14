@@ -36,6 +36,7 @@ const database = {
 
         // Return the connection and the collection.
         return {
+            db: db,
             collection: collection,
             client: client,
         };

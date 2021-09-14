@@ -2,14 +2,12 @@
 
 var express = require('express');
 var router = express.Router();
-const database = require("../db/database");
+const queries = require("../db/queries");
 
 router.get('/', async function(req, res) {
-    const db = await database.getDb();
-
     try {
         // Get all documents from the collection.
-        const resultSet = await db.collection.find({}).toArray();
+        const resultSet = await queries.getAll();
 
         // Return status 200 supplying the data.
         return res.status(200).json({ data: resultSet });
@@ -23,9 +21,6 @@ router.get('/', async function(req, res) {
                 detail: error.message
             }
         });
-    } finally {
-        // Close connection.
-        await db.client.close();
     }
 });
 
