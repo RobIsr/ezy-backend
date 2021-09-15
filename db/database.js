@@ -1,10 +1,14 @@
 "use strict";
 
 const mongo = require("mongodb").MongoClient;
+let dsn = "";
 
-const config = require("./config.json");
-let dsn = `mongodb+srv://${config.username}:${config.password}
+if (process.env.NODE_ENV !== 'test') {
+    const config = require("./config.json");
+
+    dsn = `mongodb+srv://${config.username}:${config.password}
 @cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+}
 
 const collectionName = "documents";
 
@@ -13,10 +17,6 @@ const database = {
         if (process.env.DOCKER) {
             // DSN for mongo db in docker.
             dsn = process.env.DBWEBB_DSN;
-        }
-
-        if (process.env.NODE_ENV === "local") {
-            dsn = "mongodb://localhost:27017/documents";
         }
 
         // DSN for running tests.
