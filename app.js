@@ -10,6 +10,8 @@ const save = require('./routes/save');
 const update = require('./routes/update');
 const allDocs = require('./routes/alldocs');
 
+require('dotenv-flow').config();
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
