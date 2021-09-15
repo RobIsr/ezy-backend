@@ -4,8 +4,6 @@ node_js:
     - "node"
     - "14"
     - "12"
-    - "11"
-    - "10"
 services: mongodb
 
 sudo: false
