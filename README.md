@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/RobIsr/ezy-backend.svg?branch=main)](https://app.travis-ci.com/RobIsr/ezy-backend)
+
 # Ezy-Editor API
 
 This is an api designed to be used with Ezy-Editor.
