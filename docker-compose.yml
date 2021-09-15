@@ -5,8 +5,7 @@ services:
             context: .
             dockerfile: Dockerfile
         environment:
-            - DBWEBB_DSN=${DSN}
-            - DOCKER="Yes"
+            - DATABASE_DSN=mongodb://host.docker.internal:27017/documents
         volumes:
             - ./:/app/
             - /app/node_modules/
@@ -14,7 +13,22 @@ services:
             - 1337:1337
         links:
             - mongodb
-        command: "node src/app.js"
+        command: "node app.js"
+
+    express-production:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        environment:
+            - NODE_ENV=production
+        volumes:
+            - ./:/app/
+            - /app/node_modules/
+        ports:
+            - 1337:1337
+        links:
+            - mongodb
+        command: "node app.js"
 
     mongodb:
         image: mongo

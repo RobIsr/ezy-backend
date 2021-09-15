@@ -5,10 +5,10 @@
   "main": "app.js",
   "scripts": {
     "eslint": "eslint .",
-    "test": "nyc --reporter=html --reporter=text --reporter=clover mocha --timeout 10000",
+    "test": "NODE_ENV=test nyc --reporter=html --reporter=text --reporter=clover mocha --timeout 10000",
     "posttest": "npm run eslint",
-    "start": "NODE_ENV=local nodemon app.js",
-    "start-production": "NODE_ENV=production.local nodemon app.js",
+    "start": "NODE_ENV=development nodemon app.js",
+    "start-production": "NODE_ENV=production nodemon app.js",
     "clean": "rm -rf node_modules package-lock.json"
   },
   "repository": {
