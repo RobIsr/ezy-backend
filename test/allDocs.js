@@ -22,7 +22,7 @@ describe('allDocs', () => {
     before(async () => {
         const db = await database.getDb();
 
-        db.collection.insertOne({
+        await db.collection.insertOne({
             name: "test_document",
             html: "test"
         }).finally(async function() {

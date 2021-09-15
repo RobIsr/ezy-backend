@@ -9,8 +9,7 @@ let dsn = process.env.DATABASE_DSN;
 const collectionName = "documents";
 
 const database = {
-    getDb: async function getDb () {
-        console.log(dsn);
+    getDb: async function getDb() {
         // Configure connection to mongodb.
         const client  = await mongo.connect(dsn, {
             useNewUrlParser: true,
