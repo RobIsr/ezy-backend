@@ -15,24 +15,6 @@ This is a prerequisite for running local instances of mongodb.
 
 ----
 
-Create a config file for mongodb Atlas with the login-credentials in:
-
-````
-db/config.json
-````
-
-This file shold be formatted as follows:
-````
-{
-    "username": "<mongodb-username>",
-    "password": "<mongodb-password>"
-}
-````
-
-Note that this file has to be created even if you plan on only running a local instance of mongodb. If this is the case just create the file and paste the above content in it. You only need to provide login details if you plan to connect to own mongodb Atlas account.
-
-----
-
 ## Installation using docker
 
 ### To run with local mongodb instance:
@@ -45,10 +27,10 @@ docker-compose up express
 
 ### To run with connected mongodb Atlas account:
 
-Create a new file ``` .env.production ``` in the root directory with the following structure:
+Create a new file ``` .env.production.local ``` in the root directory with the following structure:
 
 ````
-DSN=<YOUR CONNECTION STRING FROM ATLAS>
+DATABASE_DSN=<YOUR CONNECTION STRING FROM ATLAS>
 ````
 
 Where "YOUR CONNECTION STRING FROM ATLAS" is the authentication string generated in your Atlas account containing your username and password.
@@ -56,7 +38,7 @@ Where "YOUR CONNECTION STRING FROM ATLAS" is the authentication string generated
 You can now run the express server connected to mongodb Atlas with:
 
 ````
-docker-compose --env-file ./.env.prod up express
+docker-compose up express-production
 ````
 
 ----
@@ -71,20 +53,26 @@ npm install
 
 ### To run with local mongodb instance:
 
-Run the express server connected to local mongodb instance set node eviornment variable to 'local' with:
+Run the express server connected to local mongodb instance with:
 
 ````
-NODE_ENV=local npm start
+npm start
 ````
 
 ### To run with connected mongodb Atlas account:
 
-Make sure that you have the correct authentication details in the config.json that you created.
-
-Run the express server connected to mongodb Atlas with:
+Create a new file ``` .env.production.local ``` in the root directory with the following structure:
 
 ````
-npm start
+DATABASE_DSN=<YOUR CONNECTION STRING FROM ATLAS>
+````
+
+Where "YOUR CONNECTION STRING FROM ATLAS" is the authentication string generated in your Atlas account containing your username and password.
+
+You can now run the express server connected to mongodb Atlas with:
+
+````
+npm run start-production
 ````
 
 ----
