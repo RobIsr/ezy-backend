@@ -4,10 +4,11 @@
   "description": "Backend for ezy-editor",
   "main": "app.js",
   "scripts": {
+    "build": "npm install",
     "eslint": "eslint .",
     "test": "nyc --reporter=html --reporter=text --reporter=clover mocha --timeout 10000",
     "posttest": "npm run eslint",
-    "start": "nodemon src/app.js",
+    "start": "nodemon app.js",
     "clean": "rm -rf node_modules package-lock.json"
   },
   "repository": {

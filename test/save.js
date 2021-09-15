@@ -11,7 +11,7 @@ const database = require("../db/database.js");
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
-const server = require('../src/app.js');
+const server = require('../app.js');
 const queries = require('../db/queries');
 
 chai.should();

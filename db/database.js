@@ -1,14 +1,10 @@
 "use strict";
 
 const mongo = require("mongodb").MongoClient;
-let dsn = "";
 
-if (process.env.NODE_ENV !== 'test') {
-    const config = require("./config.json");
+const config = require("./config.json");
 
-    dsn = `mongodb+srv://${config.username}:${config.password}
-@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
-}
+let dsn = `mongodb+srv://${config.username}:${config.password}@cluster0.inbl1.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 
 const collectionName = "documents";
 

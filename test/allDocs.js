@@ -10,7 +10,7 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
 const database = require("../db/database.js");
-const server = require('../src/app.js');
+const server = require('../app.js');
 const queries = require('../db/queries');
 
 chai.should();
