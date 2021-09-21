@@ -6,6 +6,20 @@ const morgan = require('morgan');
 const app = express();
 const port = process.env.PORT || 1337;
 
+const httpServer = require("http").createServer(app);
+
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.sockets.on('connection', function(socket) {
+    console.log(socket.id); // Nått lång och slumpat
+    //socket.emit("message", "data");
+});
+
 //Routes
 const save = require('./routes/save');
 const update = require('./routes/update');
