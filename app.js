@@ -85,6 +85,8 @@ io.sockets.on('connection', async function(socket) {
         console.log("Sending to room: ", data.id);
         socket.to(data.id).emit("message", data.html);
 
+        socket.to(data.id).emit("save", false);
+
         clearTimeout(throttleTimer);
         throttleTimer = setTimeout(async function() {
             // Filter to search find the document requested by id.
@@ -102,6 +104,7 @@ io.sockets.on('connection', async function(socket) {
 
             try {
                 await queries.update(filter, updateDoc, options);
+                socket.to(data.id).emit("save", true);
             } catch (error) {
                 console.log(error);
             }
