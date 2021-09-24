@@ -70,10 +70,10 @@ const server = app.listen(port, () => console.log(`Example API listening on port
 //const httpServer = require("http").createServer(app);
 
 const io = require("socket.io")(server, {
-  cors: {
+    cors: {
     origin: "https://www.student.bth.se",
     methods: ["GET", "POST"]
-  }
+    }
 });
 
 io.sockets.on('connection', async function(socket) {
@@ -89,15 +89,16 @@ io.sockets.on('connection', async function(socket) {
         throttleTimer = setTimeout(async function() {
             // Filter to search find the document requested by id.
             const filter = { _id: ObjectId(data.id) };
-            // this option instructs the method to create a document if no documents match the filter
+            // this option instructs the method to create a
+            // document if no documents match the filter
             const options = { upsert: true };
             // create a document that sets name and html attributes of the document.
             const updateDoc = {
-            $set: {
-                name: data.name,
-                html: data.html
-            },
-        };
+                $set: {
+                    name: data.name,
+                    html: data.html
+                },
+            };
             const result = await queries.update(filter, updateDoc, options);
             console.log(result);
         }, 2000);
