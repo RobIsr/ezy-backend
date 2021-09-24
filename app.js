@@ -2,28 +2,16 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
+const { ObjectId } = require('bson');
 
 const app = express();
 const port = process.env.PORT || 1337;
-
-const httpServer = require("http").createServer(app);
-
-const io = require("socket.io")(httpServer, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
-  }
-});
-
-io.sockets.on('connection', function(socket) {
-    console.log(socket.id); // Nått lång och slumpat
-    //socket.emit("message", "data");
-});
 
 //Routes
 const save = require('./routes/save');
 const update = require('./routes/update');
 const allDocs = require('./routes/alldocs');
+const queries = require('./db/queries');
 
 
 app.use(cors());
@@ -78,5 +66,48 @@ app.use((err, req, res, next) => {
 
 // Start up server
 const server = app.listen(port, () => console.log(`Example API listening on port ${port}!`));
+
+//const httpServer = require("http").createServer(app);
+
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:4200",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.sockets.on('connection', async function(socket) {
+    let throttleTimer;
+
+    socket.on('message', async function(data) {
+        console.log(data.id + " ", data.html ); // Nått lång och slumpat
+        //io.sockets.emit("message", message);
+        console.log("Sending to room: ", data.id);
+        socket.to(data.id).emit("message", data.html);
+
+        clearTimeout(throttleTimer);
+        throttleTimer = setTimeout(async function() {
+            // Filter to search find the document requested by id.
+            const filter = { _id: ObjectId(data.id) };
+            // this option instructs the method to create a document if no documents match the filter
+            const options = { upsert: true };
+            // create a document that sets name and html attributes of the document.
+            const updateDoc = {
+            $set: {
+                name: data.name,
+                html: data.html
+            },
+        };
+            const result = await queries.update(filter, updateDoc, options);
+            console.log(result);
+        }, 2000);
+    });
+    socket.on('create', function(room) {
+        console.log('Joined: ', room);
+        socket.join(room);
+    });
+    
+});
+
 
 module.exports = server;
