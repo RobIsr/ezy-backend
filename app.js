@@ -99,7 +99,12 @@ io.sockets.on('connection', async function(socket) {
                     html: data.html
                 },
             };
-            const result = await queries.update(filter, updateDoc, options);
+
+            try {
+                await queries.update(filter, updateDoc, options);
+            } catch (error) {
+                console.log(error);
+            }
         }, 2000);
     });
     socket.on('create', function(room) {
