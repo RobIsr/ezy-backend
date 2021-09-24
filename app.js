@@ -85,7 +85,7 @@ io.sockets.on('connection', async function(socket) {
         console.log("Sending to room: ", data.id);
         socket.to(data.id).emit("message", data.html);
 
-        socket.to(data.id).emit("save", false);
+        socket.to(data.id).emit("save", "not-saved");
 
         clearTimeout(throttleTimer);
         throttleTimer = setTimeout(async function() {
@@ -104,7 +104,7 @@ io.sockets.on('connection', async function(socket) {
 
             try {
                 await queries.update(filter, updateDoc, options);
-                socket.to(data.id).emit("save", true);
+                socket.to(data.id).emit("save", "saved");
             } catch (error) {
                 console.log(error);
             }
