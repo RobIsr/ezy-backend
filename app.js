@@ -71,8 +71,8 @@ const server = app.listen(port, () => console.log(`Example API listening on port
 
 const io = require("socket.io")(server, {
     cors: {
-    origin: "https://www.student.bth.se",
-    methods: ["GET", "POST"]
+        origin: "https://www.student.bth.se",
+        methods: ["GET", "POST"]
     }
 });
 
@@ -100,14 +100,12 @@ io.sockets.on('connection', async function(socket) {
                 },
             };
             const result = await queries.update(filter, updateDoc, options);
-            console.log(result);
         }, 2000);
     });
     socket.on('create', function(room) {
         console.log('Joined: ', room);
         socket.join(room);
     });
-    
 });
 
 
