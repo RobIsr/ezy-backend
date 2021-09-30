@@ -11,6 +11,8 @@ const port = process.env.PORT || 1337;
 const save = require('./routes/save');
 const update = require('./routes/update');
 const allDocs = require('./routes/alldocs');
+const register = require('./routes/register');
+const login = require('./routes/login');
 const queries = require('./db/queries');
 
 
@@ -27,6 +29,8 @@ if (process.env.NODE_ENV !== 'test') {
 app.use('/save', save);
 app.use('/allDocs', allDocs);
 app.use('/update', update);
+app.use('/register', register);
+app.use('/login', login);
 
 // Add a route
 app.get("/", async (req, res) => {

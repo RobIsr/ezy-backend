@@ -23,6 +23,18 @@ const queries = {
 
         await db.client.close();
         return result;
+    },
+    register: async function(user) {
+        const db = await database.getDb();
+        const result = await db.userCollection.insertOne(user);
+
+        await db.client.close();
+        return result;
+    },
+    getPasswordForUser: async function(username) {
+        const db = await database.getDb();
+        const result = await db.userCollection.findOne({username : username});
+        return result;
     }
 };
 

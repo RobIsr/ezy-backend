@@ -23,6 +23,7 @@
   "homepage": "https://github.com/RobIsr/ezy-backend#readme",
   "dependencies": {
     "@tinymce/tinymce-angular": "^4.2.4",
+    "bcryptjs": "^2.4.3",
     "chai": "^4.3.4",
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",
