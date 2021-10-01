@@ -8,15 +8,16 @@ const app = express();
 const port = process.env.PORT || 1337;
 
 //Routes
-const save = require('./routes/save');
-const update = require('./routes/update');
-const allDocs = require('./routes/alldocs');
-const register = require('./routes/register');
-const login = require('./routes/login');
+const auth = require('./routes/auth');
+const data = require('./routes/data');
 const queries = require('./db/queries');
 
 
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:4200',
+        'https://www.student.bth.se']
+}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -26,11 +27,8 @@ if (process.env.NODE_ENV !== 'test') {
     app.use(morgan('combined')); // 'combined' outputs the Apache style LOGs
 }
 
-app.use('/save', save);
-app.use('/allDocs', allDocs);
-app.use('/update', update);
-app.use('/register', register);
-app.use('/login', login);
+app.use('/', data);
+app.use('/', auth);
 
 // Add a route
 app.get("/", async (req, res) => {
@@ -75,7 +73,7 @@ const server = app.listen(port, () => console.log(`Example API listening on port
 
 const io = require("socket.io")(server, {
     cors: {
-        origin: "https://www.student.bth.se",
+        origin: "http://localhost:4200",
         methods: ["GET", "POST"]
     }
 });
