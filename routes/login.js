@@ -3,25 +3,24 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../config.json');
 
 const queries = require("../db/queries");
 
-router.post('/', async function(req, response) {
-    console.log(req.body);
+router.post('/', async function(req, res) {
     let user = await queries.getPasswordForUser(req.body.username);
-
-    console.log(user);
-
     let passwordHash = user.password;
 
-    console.log(passwordHash);
-
-    bcrypt.compare(req.body.password, passwordHash, function(err, res) {
-        console.log(res);
-        if (res) {
-            return response.status(200).json({ data: "Login success!" });
+    bcrypt.compare(req.body.password, passwordHash, function(err, result) {
+        if (result) {
+            // Generate an access token
+            const accessToken = jwt.sign({ username: user.username }, config.jwt_secret);
+            
+            // Send generated acess token as response to client.
+            return res.json({accessToken});
         } else {
-            return response.status(401).json({ data: "Login failed!" });
+            return res.status(401).json({ data: "Login failed!" });
         }
     });
 });

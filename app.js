@@ -75,8 +75,9 @@ const server = app.listen(port, () => console.log(`Example API listening on port
 
 const io = require("socket.io")(server, {
     cors: {
-        origin: "https://www.student.bth.se",
-        methods: ["GET", "POST"]
+        origin: ["https://www.student.bth.se", "http://localhost:4200"],
+        methods: ["GET", "POST"],
+        credentials: true
     }
 });
 

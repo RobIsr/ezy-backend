@@ -11,6 +11,7 @@ const userCollectionName = "users";
 
 const database = {
     getDb: async function getDb() {
+        console.log(dsn);
         // Configure connection to mongodb.
         const client  = await mongo.connect(dsn, {
             useNewUrlParser: true,
