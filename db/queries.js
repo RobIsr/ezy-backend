@@ -24,9 +24,9 @@ const queries = {
         await db.client.close();
         return result;
     },
-    register: async function(user) {
+    register: async function(filter, user, options) {
         const db = await database.getDb();
-        const result = await db.userCollection.insertOne(user);
+        const result = await db.userCollection.updateOne(filter, user, options);
 
         await db.client.close();
         return result;

@@ -28,26 +28,32 @@ const auth = {
     },
 
     register: async function(req, res) {
+        const jwtHeader = req.headers.authorization;
         bcrypt.hash(req.body.password, saltRounds, async function(err, hash) {
             try {
-                // Document to be inserted.
-                const user = {
-                    type: "user",
-                    username: req.body.username,
-                    password: hash,
+                // Filter to search find the document requested by id.
+                const filter = { username: req.body.username };
+                
+                // this option instructs the method to create a document if no documents match the filter
+                const options = { upsert: true };
+                // create a document that sets name and html attributes of the document.
+                const updateDoc = {
+                    $setOnInsert: {
+                        type: "user",
+                        username: req.body.username,
+                        password: hash,
+                    },
                 };
-    
-                console.log(user);
-        
-                // Insert document
-                const result = await queries.register(user);
-        
-                // Check for successful operation and return status 200.
-                if (result.acknowledged) {
-                    return res.status(201).json({ data: result });
+
+                // Find the document and update its data.
+                const result = await queries.register(filter, updateDoc, options);
+                if (result.upsertedId) {
+                    return res.status(200).json({ data: "Registration successful, you can now login." });
+                } else {
+                    return res.status(409).json({ data: "Username already exists..." });
                 }
             } catch (error) {
-                //Return error specifying route concerned.
+                // Send database error specifying the route concerned.
                 return res.status(500).json({
                     errors: {
                         status: 500,

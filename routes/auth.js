@@ -6,7 +6,7 @@ router.post('/login', async function(req, res) {
     authModel.login(req, res);
 });
 
-router.post('/register', async function(req, res) {
+router.put('/register', async function(req, res) {
     authModel.register(req, res);
 });
 
