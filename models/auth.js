@@ -8,7 +8,11 @@ const auth = {
 
     login: async function(req, res) {
         let user = await queries.getPasswordForUser(req.body.username);
-        let passwordHash = user.password;
+        let passwordHash = "";
+
+        if (user) {
+            passwordHash = user.password;
+        }
     
         bcrypt.compare(req.body.password, passwordHash, function(err, result) {
             if (result) {

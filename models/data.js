@@ -13,13 +13,13 @@ const data = {
 
             var result = [];
 
-            if (resultSet.length > 0) {
-                resultSet.forEach((doc) => {
+            resultSet.forEach((doc) => {
+                if (doc.allowedUsers) {
                     if (doc.allowedUsers.includes(decodedJwt.username)) {
                         result.push(doc);
                     }
-                });
-            }
+                }
+            });
             
             console.log('Result: ', result);
             // Return status 200 supplying the data.
