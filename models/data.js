@@ -12,11 +12,15 @@ const data = {
             const resultSet = await queries.getAll();
 
             var result = [];
-            resultSet.forEach((doc) => {
-                if (doc.allowedUsers.includes(decodedJwt.username)) {
-                    result.push(doc);
-                }
-            })
+
+            if (resultSet.length > 0) {
+                resultSet.forEach((doc) => {
+                    if (doc.allowedUsers.includes(decodedJwt.username)) {
+                        result.push(doc);
+                    }
+                });
+            }
+            
             console.log('Result: ', result);
             // Return status 200 supplying the data.
             return res.status(200).json({ data: result });
