@@ -4,8 +4,6 @@
  * Test for /save route.
  */
 
-process.env.NODE_ENV = 'test';
-
 const database = require("../db/database.js");
 
 const chai = require('chai');
@@ -19,18 +17,40 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('save', () => {
+    let testToken = "";
+
+    before(async () => {
+        await chai.request(server)
+            .put("/register")
+            .send({
+                username: 'test',
+                password: 'test',
+            });
+
+        await chai.request(server)
+            .post("/login")
+            .send({
+                username: 'test',
+                password: 'test',
+            }).then((res) => {
+                testToken = res.body.accessToken;
+                return;
+            });
+    });
+
     after(async () => {
         const db = await database.getDb();
 
-        db.collection.deleteMany()
-            .finally(async function() {
-                await db.client.close();
-            });
+        await db.collection.drop();
+        await db.userCollection.drop();
+
+        await db.client.close();
     });
 
     it('Check success', (done) => {
         chai.request(server)
             .post('/save')
+            .set({ Authorization: testToken })
             .type('documents')
             .field({
                 name: 'test-name',
@@ -44,6 +64,7 @@ describe('save', () => {
     it('Check data count to make sure one document was inserted.', (done) => {
         chai.request(server)
             .get("/allDocs")
+            .set({ Authorization: testToken })
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.an("object");
@@ -68,6 +89,7 @@ describe('save', () => {
 
         chai.request(server)
             .post('/save')
+            .set({ Authorization: testToken })
             .field({
                 name: 'test-name',
                 html: 'test-html',

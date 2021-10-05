@@ -33,18 +33,20 @@ const queries = {
     },
     getPasswordForUser: async function(username) {
         const db = await database.getDb();
-        const result = await db.userCollection.findOne({username : username});
+        const result = await db.userCollection.findOne({username: username});
+
         return result;
     },
     getAllowedUsers: async function(filter) {
         const db = await database.getDb();
         const result = await db.collection.findOne(filter);
+
         await db.client.close();
         return result.allowedUsers;
     },
     getAllUsers: async function() {
         const db = await database.getDb();
-        const result = await db.userCollection.find({}).project({password:0}).toArray();
+        const result = await db.userCollection.find({}).project({password: 0}).toArray();
 
         await db.client.close();
         return result;

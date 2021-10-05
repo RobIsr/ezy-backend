@@ -4,8 +4,6 @@
  * Test for /allDocs route.
  */
 
-process.env.NODE_ENV = 'test';
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
@@ -20,38 +18,52 @@ chai.use(chaiHttp);
 var insertedId;
 
 describe('update', () => {
-    //Insert one document used in the update uperation.
-    before(async () => {
-        const db = await database.getDb();
-        var result = {};
+    let testToken = "";
 
-        result = await db.collection.insertOne({
-            name: "test_document",
-            html: "test"
-        })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(async function() {
-                await db.client.close();
+    before(async () => {
+        await chai.request(server)
+            .put("/register")
+            .send({
+                username: 'test',
+                password: 'test',
             });
-        insertedId = result.insertedId + "";
+
+        await chai.request(server)
+            .post("/login")
+            .send({
+                username: 'test',
+                password: 'test',
+            }).then((res) => {
+                testToken = res.body.accessToken;
+            });
+
+        await chai.request(server)
+            .post('/save')
+            .set({ Authorization: testToken })
+            .type('documents')
+            .field({
+                name: 'test_document',
+                html: 'test',
+            }).then((res) => {
+                insertedId = res.body.data.insertedId + "";
+            });
     });
 
     // Clean up database after completed tests.
     after(async () => {
         const db = await database.getDb();
 
-        db.collection.deleteMany()
-            .finally(async function() {
-                await db.client.close();
-            });
+        await db.collection.drop();
+        await db.userCollection.drop();
+
+        await db.client.close();
     });
 
     it('Check successful update operation on document.', (done) => {
         console.log("Before update: ", insertedId);
         chai.request(server)
             .put("/update")
+            .set({ Authorization: testToken })
             .send({
                 _id: insertedId,
                 name: 'updated-name',
@@ -84,6 +96,7 @@ describe('update', () => {
 
         chai.request(server)
             .put('/update')
+            .set({ Authorization: testToken })
             .send({
                 _id: "1",
                 name: 'updated-name',

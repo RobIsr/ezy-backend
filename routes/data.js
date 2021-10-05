@@ -1,3 +1,5 @@
+require('dotenv-flow').config();
+
 var express = require('express');
 var router = express.Router();
 const dataModel = require('../models/data');
@@ -48,13 +50,11 @@ router.put('/removeAllowedUser', async function(req, res) {
 function checkToken(req, res, next) {
     const jwtHeader = req.headers.authorization;
 
-    console.log(jwtHeader);
-
     if (jwtHeader == null) {
         return res.sendStatus(401);
     }
 
-    jwt.verify(jwtHeader, process.env.JWT_SECRET, function(err, decoded) {
+    jwt.verify(jwtHeader, process.env.JWT_SECRET, function(err) {
         if (err) {
             return res.sendStatus(403);
         }

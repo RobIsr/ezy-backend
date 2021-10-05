@@ -13,12 +13,12 @@ const auth = {
         if (user) {
             passwordHash = user.password;
         }
-    
+
         bcrypt.compare(req.body.password, passwordHash, function(err, result) {
             if (result) {
                 // Generate an access token
                 const accessToken = jwt.sign({ username: user.username }, process.env.JWT_SECRET);
-                
+
                 // Send generated acess token as response to client.
                 return res.json({accessToken});
             } else {
@@ -28,13 +28,12 @@ const auth = {
     },
 
     register: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
         bcrypt.hash(req.body.password, saltRounds, async function(err, hash) {
             try {
                 // Filter to search find the document requested by id.
                 const filter = { username: req.body.username };
-                
-                // this option instructs the method to create a document if no documents match the filter
+                // this option instructs the method to create a
+                // document if no documents match the filter
                 const options = { upsert: true };
                 // create a document that sets name and html attributes of the document.
                 const updateDoc = {
@@ -47,8 +46,11 @@ const auth = {
 
                 // Find the document and update its data.
                 const result = await queries.register(filter, updateDoc, options);
+
                 if (result.upsertedId) {
-                    return res.status(200).json({ data: "Registration successful, you can now login." });
+                    return res.status(200).json({
+                        data: "Registration successful, you can now login."
+                    });
                 } else {
                     return res.status(409).json({ data: "Username already exists..." });
                 }
@@ -65,6 +67,6 @@ const auth = {
             }
         });
     }
-}
+};
 
 module.exports = auth;

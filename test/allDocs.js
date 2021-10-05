@@ -4,8 +4,6 @@
  * Test for /allDocs route.
  */
 
-process.env.NODE_ENV = 'test';
-
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const sinon = require('sinon');
@@ -18,34 +16,51 @@ chai.should();
 chai.use(chaiHttp);
 
 describe('allDocs', () => {
+    let testToken = "";
+
     //Insert one document used to check in the tests.
     before(async () => {
-        const db = await database.getDb();
+        await chai.request(server)
+            .put("/register")
+            .send({
+                username: 'test',
+                password: 'test',
+            });
 
-        await db.collection.insertOne({
-            name: "test_document",
-            html: "test"
-        }).finally(async function() {
-            await db.client.close();
-        });
+        await chai.request(server)
+            .post("/login")
+            .send({
+                username: 'test',
+                password: 'test',
+            }).then((res) => {
+                testToken = res.body.accessToken;
+                return;
+            });
+
+        await chai.request(server)
+            .post('/save')
+            .set({ Authorization: testToken })
+            .type('documents')
+            .field({
+                name: 'test-name',
+                html: 'test-html',
+            });
     });
 
     // Clean up database after completed tests.
     after(async () => {
         const db = await database.getDb();
 
-        db.collection.deleteMany({})
-            .catch(function(error) {
-                console.log(error);
-            })
-            .finally(async function() {
-                await db.client.close();
-            });
+        await db.collection.drop();
+        await db.userCollection.drop();
+
+        await db.client.close();
     });
 
     it('Check successful retrieval of all documents', (done) => {
         chai.request(server)
             .get("/allDocs")
+            .set({ Authorization: testToken })
             .end((err, res) => {
                 res.should.have.status(200);
                 res.body.should.be.an("object");
@@ -61,10 +76,11 @@ describe('allDocs', () => {
 
         chai.request(server)
             .get('/allDocs')
+            .set({ Authorization: testToken })
             .end((err, res) => {
                 sinon.assert.calledWith(allDocsStub);
                 res.should.have.status(500);
-                sinon.restore();
+                allDocsStub.restore();
                 done();
             });
     });

@@ -1,11 +1,11 @@
 const { ObjectId } = require('bson');
-const jwt_decode = require('jwt-decode');
+const jwtDecode = require('jwt-decode');
 const queries = require("../db/queries");
 
 const data = {
     allDocs: async function(req, res) {
         const jwtHeader = req.headers.authorization;
-        const decodedJwt = jwt_decode(jwtHeader);
+        const decodedJwt = jwtDecode(jwtHeader);
 
         try {
             // Get all documents from the collection.
@@ -20,8 +20,6 @@ const data = {
                     }
                 }
             });
-            
-            console.log('Result: ', result);
             // Return status 200 supplying the data.
             return res.status(200).json({ data: result });
         } catch (error) {
@@ -40,7 +38,7 @@ const data = {
 
     save: async function(req, res) {
         const jwtHeader = req.headers.authorization;
-        const decodedJwt = jwt_decode(jwtHeader);
+        const decodedJwt = jwtDecode(jwtHeader);
 
         try {
             // Document to be inserted.
@@ -51,10 +49,10 @@ const data = {
                 name: req.body.name,
                 html: req.body.html,
             };
-    
+
             // Insert document
             const result = await queries.save(doc);
-    
+
             // Check for successful operation and return status 200.
             if (result.acknowledged) {
                 return res.status(201).json({ data: result });
@@ -73,12 +71,11 @@ const data = {
     },
 
     update: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
-        console.log(jwtHeader);
         try {
             // Filter to search find the document requested by id.
             const filter = { _id: ObjectId(req.body._id) };
-            // this option instructs the method to create a document if no documents match the filter
+            // this option instructs the method to create a document
+            // if no documents match the filter
             const options = { upsert: true };
             // create a document that sets name and html attributes of the document.
             const updateDoc = {
@@ -87,10 +84,10 @@ const data = {
                     html: req.body.html
                 },
             };
-    
+
             // Find the document and update its data.
             const result = await queries.update(filter, updateDoc, options);
-    
+
             //Check for successful update operation and return status 200.
             if (result.acknowledged) {
                 return res.status(200).json({ data: result });
@@ -109,12 +106,12 @@ const data = {
     },
 
     updateAllowedUsers: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
         try {
             // Filter to search find the document requested by id.
             const filter = { _id: ObjectId(req.body._id) };
-            
-            // this option instructs the method to create a document if no documents match the filter
+
+            // this option instructs the method to create a document if no
+            // documents match the filter
             const options = { upsert: false };
             // create a document that sets name and html attributes of the document.
             const updateDoc = {
@@ -125,6 +122,7 @@ const data = {
 
             // Find the document and update its data.
             const result = await queries.update(filter, updateDoc, options);
+
             //Check for successful update operation and return status 200.
             if (result.acknowledged) {
                 return res.status(200).json({ data: result });
@@ -143,12 +141,11 @@ const data = {
     },
 
     removeAllowedUser: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
         try {
             // Filter to search find the document requested by id.
             const filter = { _id: ObjectId(req.body._id) };
-            
-            // this option instructs the method to create a document if no documents match the filter
+            /// this option instructs the method to create a document if no
+            // documents match the filter
             const options = { upsert: false };
             // create a document that sets name and html attributes of the document.
             const updateDoc = {
@@ -156,11 +153,9 @@ const data = {
                     allowedUsers: req.body.user,
                 },
             };
-            console.log("Result: ", updateDoc);
-
             // Find the document and update its data.
             const result = await queries.update(filter, updateDoc, options);
-            console.log("Result: ", result);
+
             //Check for successful update operation and return status 200.
             if (result.acknowledged) {
                 return res.status(200).json({ data: result });
@@ -184,7 +179,7 @@ const data = {
             const filter = { _id: ObjectId(req.params.id) };
             // Find the document and update its data.
             const result = await queries.getAllowedUsers(filter);
-            console.log(result);
+
             return res.status(200).json({ data: result });
 
             //Check for successful update operation and return status 200.
@@ -206,14 +201,10 @@ const data = {
 
 
     allUsers: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
-        const decodedJwt = jwt_decode(jwtHeader);
-
         try {
             // Get all documents from the collection.
             const resultSet = await queries.getAllUsers();
-            
-            console.log('Result: ', resultSet);
+
             // Return status 200 supplying the data.
             return res.status(200).json({ data: resultSet });
         } catch (error) {
@@ -229,6 +220,6 @@ const data = {
             });
         }
     },
-}
+};
 
 module.exports = data;
