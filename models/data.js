@@ -18,7 +18,7 @@ const data = {
                     if (
                         doc.allowedUsers.includes(decodedJwt.username) ||
                         doc.owner === decodedJwt.username) {
-                            result.push(doc);
+                        result.push(doc);
                     }
                 }
             });
