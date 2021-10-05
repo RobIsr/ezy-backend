@@ -15,8 +15,10 @@ const data = {
 
             resultSet.forEach((doc) => {
                 if (doc.allowedUsers) {
-                    if (doc.allowedUsers.includes(decodedJwt.username)) {
-                        result.push(doc);
+                    if (
+                        doc.allowedUsers.includes(decodedJwt.username) ||
+                        doc.owner === decodedJwt.username) {
+                            result.push(doc);
                     }
                 }
             });
@@ -45,7 +47,8 @@ const data = {
             const doc = {
                 _id: req.body._id,
                 type: "documents",
-                allowedUsers: [decodedJwt.username],
+                owner: decodedJwt.username,
+                allowedUsers: [],
                 name: req.body.name,
                 html: req.body.html,
             };
@@ -85,8 +88,12 @@ const data = {
                 },
             };
 
-            // Find the document and update its data.
-            const result = await queries.update(filter, updateDoc, options);
+            var result = [];
+
+            if (doc.owner !== decodedJwt.username) {
+                // Find the document and update its data.
+                result = await queries.update(filter, updateDoc, options);
+            }
 
             //Check for successful update operation and return status 200.
             if (result.acknowledged) {
@@ -119,6 +126,7 @@ const data = {
                     allowedUsers: req.body.user,
                 },
             };
+
 
             // Find the document and update its data.
             const result = await queries.update(filter, updateDoc, options);
@@ -201,9 +209,12 @@ const data = {
 
 
     allUsers: async function(req, res) {
+        const jwtHeader = req.headers.authorization;
+        const decodedJwt = jwtDecode(jwtHeader);
+
         try {
             // Get all documents from the collection.
-            const resultSet = await queries.getAllUsers();
+            const resultSet = await queries.getAllUsers(decodedJwt.username);
 
             // Return status 200 supplying the data.
             return res.status(200).json({ data: resultSet });

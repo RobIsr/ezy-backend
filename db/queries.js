@@ -44,9 +44,11 @@ const queries = {
         await db.client.close();
         return result.allowedUsers;
     },
-    getAllUsers: async function() {
+    getAllUsers: async function(username) {
         const db = await database.getDb();
-        const result = await db.userCollection.find({}).project({password: 0}).toArray();
+        const result = await db.userCollection
+            .find({ username: { $ne: username } })
+            .project({password: 0}).toArray();
 
         await db.client.close();
         return result;
