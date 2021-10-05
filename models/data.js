@@ -88,12 +88,8 @@ const data = {
                 },
             };
 
-            var result = [];
-
-            if (doc.owner !== decodedJwt.username) {
-                // Find the document and update its data.
-                result = await queries.update(filter, updateDoc, options);
-            }
+            // Find the document and update its data.
+            const result = await queries.update(filter, updateDoc, options);
 
             //Check for successful update operation and return status 200.
             if (result.acknowledged) {
