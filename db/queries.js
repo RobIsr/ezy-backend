@@ -3,23 +3,34 @@
 const database = require("../db/database");
 
 const queries = {
-    getAll: async function() {
+    getUser: async function(username) {
+        console.log("Username: ", username);
         const db = await database.getDb();
-        const result = await db.collection.find({}).toArray();
+        const result = await db.userCollection.findOne({username: username});
+
+        await db.client.close();
+        console.log(result);
+        return result;
+    },
+    save: async function(filter, doc, options) {
+        const db = await database.getDb();
+        const result = await db.userCollection.updateOne(filter, doc, options);
 
         await db.client.close();
         return result;
     },
-    save: async function(doc) {
+    update: async function(username, docId, name, html) {
         const db = await database.getDb();
-        const result = await db.collection.insertOne(doc);
+        console.log("Update: ", username, " ", docId, " ", name, " ", html);
+        const result = await db.userCollection.updateOne(
+            { username: username, "documents._id": docId },
+            { $set: { 
+                "documents.$.html": html,
+                "documents.$.name": name
+            }}
+        );
 
-        await db.client.close();
-        return result;
-    },
-    update: async function(filter, doc, options) {
-        const db = await database.getDb();
-        const result = await db.collection.updateOne(filter, doc, options);
+        console.log(result);
 
         await db.client.close();
         return result;
@@ -37,12 +48,15 @@ const queries = {
 
         return result;
     },
-    getAllowedUsers: async function(filter) {
+    getAllowedUsers: async function(username, docId) {
         const db = await database.getDb();
-        const result = await db.collection.findOne(filter);
-
+        console.log(username, " ", docId);
+        const result = await db.userCollection.findOne(
+            { username: username },
+        );
         await db.client.close();
-        return result.allowedUsers;
+         
+        return result.documents[0].allowedUsers;
     },
     getAllUsers: async function(username) {
         const db = await database.getDb();
@@ -53,6 +67,33 @@ const queries = {
         await db.client.close();
         return result;
     },
+    addAllowedUser: async function(owner, username, docId) {
+        const db = await database.getDb();
+        console.log("Adding allowed user: ", owner, " ", username, " ", docId);
+        const result = await db.userCollection.updateOne(
+            { username: owner, "documents._id": docId },
+                { $addToSet: {
+                    "documents.$.allowedUsers": username,
+                },
+            },
+        );
+        await db.client.close();
+        return result;
+    },
+    removeAllowedUser: async function(owner, username, docId) {
+        const db = await database.getDb();
+        console.log("Removing allowed user: ", owner, " ", username, " ", docId);
+        const result = await db.userCollection.updateOne(
+            { username: owner, "documents._id": docId },
+                { $pull: {
+                    "documents.$.allowedUsers": username,
+                },
+            },
+        );
+
+        await db.client.close();
+        return result;
+    }
 };
 
 module.exports = queries;

@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const { ObjectId } = require('bson');
+const jwtDecode = require('jwt-decode');
 
 const app = express();
 const port = process.env.PORT || 1337;
@@ -91,27 +92,35 @@ io.sockets.on('connection', async function(socket) {
 
         clearTimeout(throttleTimer);
         throttleTimer = setTimeout(async function() {
-            // Filter to search find the document requested by id.
-            const filter = { _id: ObjectId(data.id) };
-            // this option instructs the method to create a
-            // document if no documents match the filter
-            const options = { upsert: true };
-            // create a document that sets name and html attributes of the document.
-            const updateDoc = {
-                $set: {
-                    name: data.name,
-                    html: data.html
-                },
-            };
-
             try {
-                await queries.update(filter, updateDoc, options);
+                await queries.update(data.owner, ObjectId(data.id), data.name, data.html);
                 socket.to(data.id).emit("save", false);
             } catch (error) {
                 console.log(error);
             }
         }, 2000);
     });
+
+    socket.on('add_allowed_user', async function(data) {
+        console.log('User add: ', data);
+        let docId = ObjectId(data.docId);
+        await queries.addAllowedUser(data.owner, data.username, docId);
+
+        const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
+        console.log("Updated allowed users: ", allowedUsers);
+        socket.emit("permission_updated", allowedUsers);
+    });
+
+    socket.on('remove_allowed_user', async function(data) {
+        console.log('User remove: ', data);
+        let docId = ObjectId(data.docId);
+        await queries.removeAllowedUser(data.owner, data.username, docId);
+
+        const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
+        console.log("Updated allowed users: ", allowedUsers);
+        socket.emit("permission_updated", allowedUsers);
+    });
+
     socket.on('create', function(room) {
         console.log('Joined: ', room);
         socket.join(room);

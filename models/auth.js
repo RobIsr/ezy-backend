@@ -41,6 +41,7 @@ const auth = {
                         type: "user",
                         username: req.body.username,
                         password: hash,
+                        documents: []
                     },
                 };
 
