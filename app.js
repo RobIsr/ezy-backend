@@ -3,8 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
 const { ObjectId } = require('bson');
-const jwtDecode = require('jwt-decode');
-
 const app = express();
 const port = process.env.PORT || 1337;
 
@@ -102,22 +100,22 @@ io.sockets.on('connection', async function(socket) {
     });
 
     socket.on('add_allowed_user', async function(data) {
-        console.log('User add: ', data);
         let docId = ObjectId(data.docId);
+
         await queries.addAllowedUser(data.owner, data.username, docId);
 
         const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
-        console.log("Updated allowed users: ", allowedUsers);
+
         socket.emit("permission_updated", allowedUsers);
     });
 
     socket.on('remove_allowed_user', async function(data) {
-        console.log('User remove: ', data);
         let docId = ObjectId(data.docId);
+
         await queries.removeAllowedUser(data.owner, data.username, docId);
 
         const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
-        console.log("Updated allowed users: ", allowedUsers);
+
         socket.emit("permission_updated", allowedUsers);
     });
 

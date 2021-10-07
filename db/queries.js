@@ -22,7 +22,7 @@ const queries = {
         const db = await database.getDb();
         const result = await db.userCollection.updateOne(
             { username: username, "documents._id": docId },
-            { $set: { 
+            { $set: {
                 "documents.$.html": html,
                 "documents.$.name": name
             }}
@@ -46,13 +46,13 @@ const queries = {
 
         return result;
     },
-    getAllowedUsers: async function(username, docId) {
+    getAllowedUsers: async function(username) {
         const db = await database.getDb();
         const result = await db.userCollection.findOne(
             { username: username },
         );
+
         await db.client.close();
-         
         return result.documents[0].allowedUsers;
     },
     getAllUsers: async function(username) {
@@ -68,11 +68,12 @@ const queries = {
         const db = await database.getDb();
         const result = await db.userCollection.updateOne(
             { username: owner, "documents._id": docId },
-                { $addToSet: {
-                    "documents.$.allowedUsers": username,
-                },
+            { $addToSet: {
+                "documents.$.allowedUsers": username,
+            },
             },
         );
+
         await db.client.close();
         return result;
     },
@@ -80,9 +81,9 @@ const queries = {
         const db = await database.getDb();
         const result = await db.userCollection.updateOne(
             { username: owner, "documents._id": docId },
-                { $pull: {
-                    "documents.$.allowedUsers": username,
-                },
+            { $pull: {
+                "documents.$.allowedUsers": username,
+            },
             },
         );
 

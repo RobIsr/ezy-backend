@@ -1,7 +1,6 @@
 const { ObjectId } = require('bson');
 const jwtDecode = require('jwt-decode');
 const queries = require("../db/queries");
-const { options } = require('../routes/auth');
 
 const data = {
     allDocs: async function(req, res) {
@@ -12,10 +11,11 @@ const data = {
             let documents = [];
             // Get all documents from the collection.
             const users = await queries.getAllUsers();
-            
+
             users.forEach((user) =>  {
                 user.documents.forEach((doc) => {
-                    if (doc.allowedUsers.includes(decodedJwt.username) || doc.owner === decodedJwt.username) {
+                    if (doc.allowedUsers.includes(decodedJwt.username) ||
+                    doc.owner === decodedJwt.username) {
                         documents.push(doc);
                     }
                 });
@@ -41,7 +41,7 @@ const data = {
         const jwtHeader = req.headers.authorization;
         const decodedJwt = jwtDecode(jwtHeader);
 
-        newId = new ObjectId();
+        let newId = new ObjectId();
         // Document to be inserted.
         const doc = {
             _id: newId,
@@ -91,14 +91,6 @@ const data = {
         const jwtHeader = req.headers.authorization;
         const decodedJwt = jwtDecode(jwtHeader);
 
-        // Document to be inserted.
-        const doc = {
-            type: "documents",
-            owner: decodedJwt.username,
-            name: req.body.name,
-            html: req.body.html,
-        };
-
         try {
             // Find the document and update its data.
             const result = await queries.update(
@@ -126,8 +118,6 @@ const data = {
     },
 
     updateAllowedUsers: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
-        const decodedJwt = jwtDecode(jwtHeader);
         try {
             // Filter to search find the document requested by id.
             const filter = { _id: ObjectId(req.body._id) };
@@ -202,7 +192,10 @@ const data = {
         const decodedJwt = jwtDecode(jwtHeader);
 
         try {
-            const result = await queries.getAllowedUsers(decodedJwt.username, ObjectId(req.params.id));
+            const result = await queries.getAllowedUsers(
+                decodedJwt.username,
+                ObjectId(req.params.id)
+            );
 
             return res.status(200).json({ data: result });
 
