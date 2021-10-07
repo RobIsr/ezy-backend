@@ -45,7 +45,7 @@ describe('update', () => {
                 name: 'test_document',
                 html: 'test',
             }).then((res) => {
-                insertedId = res.body.data.insertedId + "";
+                insertedId = res.body.insertedId;
             });
     });
 
@@ -53,14 +53,11 @@ describe('update', () => {
     after(async () => {
         const db = await database.getDb();
 
-        await db.collection.drop();
         await db.userCollection.drop();
-
         await db.client.close();
     });
 
     it('Check successful update operation on document.', (done) => {
-        console.log("Before update: ", insertedId);
         chai.request(server)
             .put("/update")
             .set({ Authorization: testToken })

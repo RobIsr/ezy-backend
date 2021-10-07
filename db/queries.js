@@ -4,7 +4,6 @@ const database = require("../db/database");
 
 const queries = {
     getUser: async function(username) {
-        console.log("Username: ", username);
         const db = await database.getDb();
         const result = await db.userCollection.findOne({username: username});
 
@@ -21,7 +20,6 @@ const queries = {
     },
     update: async function(username, docId, name, html) {
         const db = await database.getDb();
-        console.log("Update: ", username, " ", docId, " ", name, " ", html);
         const result = await db.userCollection.updateOne(
             { username: username, "documents._id": docId },
             { $set: { 
@@ -50,7 +48,6 @@ const queries = {
     },
     getAllowedUsers: async function(username, docId) {
         const db = await database.getDb();
-        console.log(username, " ", docId);
         const result = await db.userCollection.findOne(
             { username: username },
         );
@@ -69,7 +66,6 @@ const queries = {
     },
     addAllowedUser: async function(owner, username, docId) {
         const db = await database.getDb();
-        console.log("Adding allowed user: ", owner, " ", username, " ", docId);
         const result = await db.userCollection.updateOne(
             { username: owner, "documents._id": docId },
                 { $addToSet: {
@@ -82,7 +78,6 @@ const queries = {
     },
     removeAllowedUser: async function(owner, username, docId) {
         const db = await database.getDb();
-        console.log("Removing allowed user: ", owner, " ", username, " ", docId);
         const result = await db.userCollection.updateOne(
             { username: owner, "documents._id": docId },
                 { $pull: {

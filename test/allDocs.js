@@ -51,9 +51,7 @@ describe('allDocs', () => {
     after(async () => {
         const db = await database.getDb();
 
-        await db.collection.drop();
         await db.userCollection.drop();
-
         await db.client.close();
     });
 
@@ -72,7 +70,7 @@ describe('allDocs', () => {
 
     it('Check for 500 error on /allDocs', (done) => {
         const mError = new Error('stub: Internal server error');
-        const allDocsStub = sinon.stub(queries, 'getAll').rejects(mError);
+        const allDocsStub = sinon.stub(queries, 'getAllUsers').rejects(mError);
 
         chai.request(server)
             .get('/allDocs')

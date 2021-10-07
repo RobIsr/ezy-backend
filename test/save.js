@@ -41,7 +41,6 @@ describe('save', () => {
     after(async () => {
         const db = await database.getDb();
 
-        await db.collection.drop();
         await db.userCollection.drop();
 
         await db.client.close();

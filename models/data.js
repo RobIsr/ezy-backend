@@ -66,17 +66,13 @@ const data = {
             },
         };
 
-        console.log("Filter: ", filter);
-        console.log("Options: ", options);
-        console.log("updateDoc: ", updateDoc);
-
         try {
             // Insert document
             const result = await queries.save(filter, updateDoc, options);
 
             // Check for successful operation and return status 200.
             if (result.acknowledged) {
-                return res.status(201).json({ data: result });
+                return res.status(201).json({ data: result, insertedId: newId });
             }
         } catch (error) {
             //Return error specifying route concerned.
@@ -102,8 +98,6 @@ const data = {
             name: req.body.name,
             html: req.body.html,
         };
-
-        const options = { upsert: true } ;
 
         try {
             // Find the document and update its data.
