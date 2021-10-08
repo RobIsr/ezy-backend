@@ -6,7 +6,7 @@ const { ObjectId } = require('bson');
 const app = express();
 const port = process.env.PORT || 1337;
 
-const visual = true;
+const visual = false;
 const { graphqlHTTP } = require('express-graphql');
 const {
     GraphQLSchema
