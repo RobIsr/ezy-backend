@@ -23,27 +23,9 @@ router.put('/update', async function(req, res) {
     });
 });
 
-router.get('/allowedUsers/:id/:owner', async function(req, res) {
-    checkToken(req, res, () => {
-        dataModel.getAllowedUsernames(req, res);
-    });
-});
-
 router.get('/allUsers', async function(req, res) {
     checkToken(req, res, () => {
         dataModel.allUsers(req, res);
-    });
-});
-
-router.put('/updateAllowedUsers', async function(req, res) {
-    checkToken(req, res, () => {
-        dataModel.updateAllowedUsers(req, res);
-    });
-});
-
-router.put('/removeAllowedUser', async function(req, res) {
-    checkToken(req, res, () => {
-        dataModel.removeAllowedUser(req, res);
     });
 });
 
