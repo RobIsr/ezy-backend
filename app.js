@@ -122,7 +122,7 @@ io.sockets.on('connection', async function(socket) {
         await queries.addAllowedUser(data.owner, data.username, docId);
 
         const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
-        console.log("Socket: ", allowedUsers);
+
         socket.emit("permission_updated", allowedUsers);
     });
 
@@ -132,8 +132,6 @@ io.sockets.on('connection', async function(socket) {
         await queries.removeAllowedUser(data.owner, data.username, docId);
 
         const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
-
-        console.log("Socket: ", allowedUsers);
 
         socket.emit("permission_updated", allowedUsers);
     });
