@@ -46,14 +46,23 @@ const queries = {
 
         return result;
     },
-    getAllowedUsers: async function(username) {
+    getAllowedUsers: async function(username, docId) {
         const db = await database.getDb();
         const result = await db.userCollection.findOne(
-            { username: username },
+            { username: username, "documents._id": docId },
         );
 
         await db.client.close();
-        return result.documents[0].allowedUsers;
+        return result.documents.find(doc => doc._id === docId);
+    },
+    getOneDocument: async function(username, docId) {
+        const db = await database.getDb();
+        const result = await db.userCollection.findOne(
+            { username: username, "documents._id": docId },
+        );
+        console.log(result.documents);
+        await db.client.close();
+        return result.documents;
     },
     getAllUsers: async function(username) {
         const db = await database.getDb();

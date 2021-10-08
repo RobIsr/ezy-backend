@@ -23,7 +23,7 @@ router.put('/update', async function(req, res) {
     });
 });
 
-router.get('/allowedUsers/:id', async function(req, res) {
+router.get('/allowedUsers/:id/:owner', async function(req, res) {
     checkToken(req, res, () => {
         dataModel.getAllowedUsernames(req, res);
     });

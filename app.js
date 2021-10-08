@@ -6,6 +6,18 @@ const { ObjectId } = require('bson');
 const app = express();
 const port = process.env.PORT || 1337;
 
+const visual = true;
+const { graphqlHTTP } = require('express-graphql');
+const {
+  GraphQLSchema
+} = require("graphql");
+
+const RootQueryType = require("./graphql/root.js");
+
+const schema = new GraphQLSchema({
+    query: RootQueryType
+});
+
 //Routes
 const auth = require('./routes/auth');
 const data = require('./routes/data');
@@ -28,6 +40,11 @@ if (process.env.NODE_ENV !== 'test') {
 
 app.use('/', data);
 app.use('/', auth);
+
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    graphiql: visual,
+}));
 
 // Add a route
 app.get("/", async (req, res) => {
@@ -105,7 +122,7 @@ io.sockets.on('connection', async function(socket) {
         await queries.addAllowedUser(data.owner, data.username, docId);
 
         const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
-
+        console.log("Socket: ", allowedUsers);
         socket.emit("permission_updated", allowedUsers);
     });
 
@@ -115,6 +132,8 @@ io.sockets.on('connection', async function(socket) {
         await queries.removeAllowedUser(data.owner, data.username, docId);
 
         const allowedUsers = await queries.getAllowedUsers(data.owner, docId);
+
+        console.log("Socket: ", allowedUsers);
 
         socket.emit("permission_updated", allowedUsers);
     });

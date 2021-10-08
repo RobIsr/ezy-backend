@@ -188,12 +188,9 @@ const data = {
 
 
     getAllowedUsernames: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
-        const decodedJwt = jwtDecode(jwtHeader);
-
         try {
             const result = await queries.getAllowedUsers(
-                decodedJwt.username,
+                req.params.owner,
                 ObjectId(req.params.id)
             );
 
