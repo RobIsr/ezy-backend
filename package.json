@@ -1,6 +1,6 @@
 {
   "name": "ezy-api",
-  "version": "4.0.3",
+  "version": "5.0.0",
   "description": "Backend for ezy-editor",
   "main": "app.js",
   "scripts": {
