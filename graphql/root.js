@@ -2,7 +2,6 @@ const {
     GraphQLObjectType,
     GraphQLList,
     GraphQLString,
-    GraphQLNonNull
 } = require('graphql');
 
 const { ObjectId } = require('bson');
@@ -18,7 +17,7 @@ const RootQueryType = new GraphQLObjectType({
         users: {
             type: GraphQLList(UserType),
             description: 'List of all users',
-            resolve: async function(_id) {
+            resolve: async function() {
                 return await queries.getAllUsers();
             }
         },
@@ -30,7 +29,6 @@ const RootQueryType = new GraphQLObjectType({
             },
             resolve: async function(parent, args) {
                 //let documents = [];
-                console.log("Username: ", args.username);
                 let documents = [];
                 // Get all documents from the collection.
                 const users = await queries.getAllUsers();
@@ -55,8 +53,8 @@ const RootQueryType = new GraphQLObjectType({
                 docId: {type: GraphQLString}
             },
             resolve: async function(parent, args) {
-                console.log("GQL: ", args.username, " ", args.docId);
                 const document = await queries.getOneDocument(args.username, ObjectId(args.docId));
+
                 return document[0];
             }
         }

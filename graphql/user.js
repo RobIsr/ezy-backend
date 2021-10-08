@@ -15,7 +15,7 @@ const UserType = new GraphQLObjectType({
         documents: {
             type: GraphQLList(DocumentType),
             resolve: (user) => {
-                return user.documents
+                return user.documents;
             }
         },
         type: { type: GraphQLNonNull(GraphQLString) }

@@ -60,7 +60,7 @@ const queries = {
         const result = await db.userCollection.findOne(
             { username: username, "documents._id": docId },
         );
-        console.log(result.documents);
+
         await db.client.close();
         return result.documents;
     },

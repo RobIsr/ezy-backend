@@ -9,7 +9,7 @@ const port = process.env.PORT || 1337;
 const visual = true;
 const { graphqlHTTP } = require('express-graphql');
 const {
-  GraphQLSchema
+    GraphQLSchema
 } = require("graphql");
 
 const RootQueryType = require("./graphql/root.js");
