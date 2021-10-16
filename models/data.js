@@ -109,10 +109,7 @@ const data = {
         }
     },
 
-    generatePdf: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
-        const decodedJwt = jwtDecode(jwtHeader);
-
+    generatePdf: function(req, res) {
         let options = {
             "height": "11.25in",
             "width": "8.5in",
@@ -131,7 +128,12 @@ const data = {
                 res.send(err);
             } else {
                 res.setHeader('Content-Type', 'application/pdf');
-                stream.pipe(res);
+                stream.on('data', function (data) {
+                    res.write(data);
+                });
+                stream.on('end', function () {
+                    res.status(200).end();
+                });
             }
         });
     }
