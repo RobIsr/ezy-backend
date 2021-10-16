@@ -125,10 +125,11 @@ const data = {
         };
 
         pdf.create(req.body.html, options).toStream(function (err, stream) {
+            console.log(stream);
             if (err) {
+                console.log(err);
                 res.send(err);
             } else {
-                console.log(stream);
                 res.setHeader('Content-Type', 'application/pdf');
                 stream.pipe(res);
             }
