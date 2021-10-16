@@ -124,7 +124,7 @@ const data = {
             },
         };
 
-        pdf.create(req.body.html, options).toStream(async function (err, stream) {
+        pdf.create(req.body.html, options).toStream(function (err, stream) {
             if (err) {
                 res.send(err);
             } else {
