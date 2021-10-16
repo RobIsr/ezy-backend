@@ -98,7 +98,7 @@ const queries = {
 
         await db.client.close();
         return result;
-    }
+    },
 };
 
 module.exports = queries;

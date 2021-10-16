@@ -1,6 +1,8 @@
 const { ObjectId } = require('bson');
 const jwtDecode = require('jwt-decode');
 const queries = require("../db/queries");
+let pdf = require("html-pdf");
+var fs = require('fs');
 
 const data = {
     save: async function(req, res) {
@@ -106,6 +108,32 @@ const data = {
             });
         }
     },
-};
+
+    generatePdf: async function(req, res) {
+        const jwtHeader = req.headers.authorization;
+        const decodedJwt = jwtDecode(jwtHeader);
+
+        let options = {
+            "height": "11.25in",
+            "width": "8.5in",
+            "header": {
+                "height": "20mm"
+            },
+            "footer": {
+                "height": "20mm",
+            },
+        };
+
+        pdf.create(req.body.html, options).toStream(async function (err, stream) {
+            if (err) {
+                res.send(err);
+            } else {
+                console.log(stream);
+                res.setHeader('Content-Type', 'application/pdf');
+                stream.pipe(res);
+            }
+        });
+    }
+}
 
 module.exports = data;

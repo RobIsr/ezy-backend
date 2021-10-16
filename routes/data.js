@@ -29,6 +29,18 @@ router.get('/allUsers', async function(req, res) {
     });
 });
 
+router.post('/generatePdf', async function(req, res) {
+    //checkToken(req, res, () => {
+        dataModel.generatePdf(req, res);
+    //});
+});
+
+router.get('/generatePdf', async function(req, res) {
+    //checkToken(req, res, () => {
+        dataModel.generatePdf(req, res);
+    //});
+});
+
 function checkToken(req, res, next) {
     const jwtHeader = req.headers.authorization;
 
