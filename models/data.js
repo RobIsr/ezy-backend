@@ -126,7 +126,7 @@ const data = {
 
         pdf.create(req.body.html, options).toStream(function (err, stream) {
             if (err) {
-                console.log(err);
+                //console.log(err);
                 res.send(err);
             } else {
                 res.setHeader('Content-Type', 'application/pdf');
