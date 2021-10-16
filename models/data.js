@@ -130,7 +130,7 @@ const data = {
                 res.send(err);
             } else {
                 res.setHeader('Content-Type', 'application/pdf');
-                stream.pipe(res);
+                res.send(stream);
             }
         });
     }
