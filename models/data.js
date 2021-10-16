@@ -125,12 +125,13 @@ const data = {
         };
 
         pdf.create(req.body.html, options).toStream(function (err, stream) {
+            console.log(stream);
             if (err) {
-                //console.log(err);
+                console.log(err);
                 res.send(err);
             } else {
                 res.setHeader('Content-Type', 'application/pdf');
-                res.send(stream);
+                stream.pipe(res);
             }
         });
     }
