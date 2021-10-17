@@ -109,17 +109,22 @@ const data = {
     },
 
     generatePdf: async function(req, res) {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
+        try {
+            const browser = await puppeteer.launch();
+            const page = await browser.newPage();
 
-        await page.setContent(req.body.html);
+            await page.setContent(req.body.html);
 
-        const pdfBuffer = await page.pdf();
+            const pdfBuffer = await page.pdf();
 
-        await page.close();
-        await browser.close();
+            await page.close();
+            await browser.close();
 
-        res.send(pdfBuffer);
+            res.send(pdfBuffer);
+        } catch (error) {
+            console.log(error);
+        }
+        
     }
 }
 
