@@ -110,12 +110,11 @@ const data = {
     },
 
     generatePdf: async function(req, res) {
-        const browser = await puppeteer.launch();
+        await puppeteer.launch();
         let options = { format: 'A4' };
         let file = { content: req.body.html }
 
         html_to_pdf.generatePdf(file, options).then(output => {
-        console.log("PDF Buffer:-", output);
         res.setHeader('Content-Type', 'application/pdf');
         res.send(output);
         });
