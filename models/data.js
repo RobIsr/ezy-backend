@@ -1,8 +1,7 @@
 const { ObjectId } = require('bson');
 const jwtDecode = require('jwt-decode');
 const queries = require("../db/queries");
-let pdf = require("html-pdf");
-var fs = require('fs');
+var html_to_pdf = require('html-pdf-node');
 
 const data = {
     save: async function(req, res) {
@@ -110,32 +109,40 @@ const data = {
     },
 
     generatePdf: function(req, res) {
-        let options = {
-            "height": "11.25in",
-            "width": "8.5in",
-            "header": {
-                "height": "20mm"
-            },
-            "footer": {
-                "height": "20mm",
-            },
-        };
+        let options = { format: 'A4' };
+        let file = { content: req.body.html }
 
-        pdf.create(req.body.html, options).toStream(function (err, stream) {
-            console.log(stream);
-            if (err) {
-                console.log(err);
-                res.send(err);
-            } else {
-                res.setHeader('Content-Type', 'application/pdf');
-                stream.on('data', function (data) {
-                    res.write(data);
-                });
-                stream.on('end', function () {
-                    res.status(200).end();
-                });
-            }
+        html_to_pdf.generatePdf(file, options).then(output => {
+        console.log("PDF Buffer:-", output);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.send(output);
         });
+        // let options = {
+        //     "height": "11.25in",
+        //     "width": "8.5in",
+        //     "header": {
+        //         "height": "20mm"
+        //     },
+        //     "footer": {
+        //         "height": "20mm",
+        //     },
+        // };
+
+        // pdf.create(req.body.html, options).toStream(function (err, stream) {
+        //     console.log(stream);
+        //     if (err) {
+        //         console.log(err);
+        //         res.send(err);
+        //     } else {
+        //         res.setHeader('Content-Type', 'application/pdf');
+        //         stream.on('data', function (data) {
+        //             res.write(data);
+        //         });
+        //         stream.on('end', function () {
+        //             res.status(200).end();
+        //         });
+        //     }
+        // });
     }
 }
 
