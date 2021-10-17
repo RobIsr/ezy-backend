@@ -1,7 +1,6 @@
 const { ObjectId } = require('bson');
 const jwtDecode = require('jwt-decode');
 const queries = require("../db/queries");
-var html_to_pdf = require('html-pdf-node');
 const puppeteer = require("puppeteer");
 
 const data = {
@@ -110,14 +109,17 @@ const data = {
     },
 
     generatePdf: async function(req, res) {
-        await puppeteer.launch();
-        let options = { format: 'A4' };
-        let file = { content: req.body.html }
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
 
-        html_to_pdf.generatePdf(file, options).then(output => {
-        res.setHeader('Content-Type', 'application/pdf');
-        res.send(output);
-        });
+        await page.setContent(req.body.html);
+
+        const pdfBuffer = await page.pdf();
+
+        await page.close();
+        await browser.close();
+
+        res.send(pdfBuffer);
     }
 }
 

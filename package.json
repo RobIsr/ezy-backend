@@ -32,12 +32,12 @@
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.6.1",
-    "html-pdf-node": "^1.0.7",
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "mongodb": "^4.1.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.12",
+    "puppeteer": "^10.4.0",
     "socket.io": "^4.2.0",
     "supertest": "^6.1.6"
   },
