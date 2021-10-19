@@ -29,6 +29,12 @@ router.get('/allUsers', async function(req, res) {
     });
 });
 
+router.post('/addComment', async function(req, res) {
+    checkToken(req, res, () => {
+        dataModel.addComment(req, res);
+    });
+});
+
 router.post('/generatePdf', async function(req, res) {
     checkToken(req, res, () => {
         dataModel.generatePdf(req, res);

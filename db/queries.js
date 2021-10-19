@@ -99,6 +99,19 @@ const queries = {
         await db.client.close();
         return result;
     },
+    addComment: async function(username, comment, docId) {
+        const db = await database.getDb();
+        const result = await db.userCollection.updateOne(
+            { username: username, "documents._id": docId },
+            { $addToSet: {
+                "documents.$.comments": comment,
+            },
+            },
+        );
+
+        await db.client.close();
+        return result;
+    },
 };
 
 module.exports = queries;

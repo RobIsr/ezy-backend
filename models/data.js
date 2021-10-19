@@ -125,6 +125,39 @@ const data = {
             console.log(error);
         }
         
+    },
+
+    addComment: async function(req, res) {
+        const jwtHeader = req.headers.authorization;
+        const decodedJwt = jwtDecode(jwtHeader);
+
+        let newId = new ObjectId();
+        // Document to be inserted.
+        const comment = {
+            _id: newId,
+            type: "comment",
+            comment: req.body.comment
+        };
+
+        try {
+            // Insert document
+            const result = await queries.addComment(decodedJwt.username, comment, req.body.docId);
+
+            // Check for successful operation and return status 200.
+            if (result.acknowledged) {
+                return res.status(201).json({ data: result, insertedId: newId });
+            }
+        } catch (error) {
+            //Return error specifying route concerned.
+            return res.status(500).json({
+                errors: {
+                    status: 500,
+                    source: "/addComment",
+                    title: "Database error",
+                    detail: error.message
+                }
+            });
+        }
     }
 }
 
