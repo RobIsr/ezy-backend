@@ -134,7 +134,9 @@ const data = {
             from: req.body.sender,
             to: req.body.email,
             subject: "Invitation",
-            text: "You have been invited to join editing on document"
+            html: `<h2>Hello,</h2>
+            <p>You have been invited to join editing on a document in EzyEditor.</p><br>
+            <a href='https://www.student.bth.se/~rois20/editor/#/register'>Click here to join</a>`,
         };
 
         try {
