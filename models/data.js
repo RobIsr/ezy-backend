@@ -2,6 +2,7 @@ const { ObjectId } = require('bson');
 const jwtDecode = require('jwt-decode');
 const queries = require("../db/queries");
 const puppeteer = require("puppeteer");
+const mailgun = require("mailgun-js");
 
 const data = {
     save: async function(req, res) {
@@ -127,36 +128,31 @@ const data = {
         
     },
 
-    addComment: async function(req, res) {
-        const jwtHeader = req.headers.authorization;
-        const decodedJwt = jwtDecode(jwtHeader);
-
-        let newId = new ObjectId();
-        // Document to be inserted.
-        const comment = {
-            _id: newId,
-            type: "comment",
-            comment: req.body.comment
+    sendInvite(req, res) {
+        const mg = mailgun({apiKey: process.env.MAILGUN_SECRET, domain: process.env.MAILGUN_DOMAIN});
+        const data = {
+            from: req.body.sender,
+            to: req.body.email,
+            subject: "Invitation",
+            text: "You have been invited to join editing on document"
         };
 
         try {
-            // Insert document
-            const result = await queries.addComment(decodedJwt.username, comment, req.body.docId);
-
-            // Check for successful operation and return status 200.
-            if (result.acknowledged) {
-                return res.status(201).json({ data: result, insertedId: newId });
-            }
+            mg.messages().send(data, function (error, body) {
+                console.log(body);
+                return res.status(200).json({ data: body });
+            });
         } catch (error) {
-            //Return error specifying route concerned.
+            console.log(error);
+            // Return error specifying the route concerned.
             return res.status(500).json({
                 errors: {
                     status: 500,
-                    source: "/addComment",
-                    title: "Database error",
+                    source: "/sendInvite",
+                    title: "Mailgun error",
                     detail: error.message
                 }
-            });
+            }); 
         }
     }
 }
