@@ -136,6 +136,9 @@ const data = {
             subject: "Invitation",
             html: `<h2>Hello,</h2>
             <p>You have been invited to join editing on a document in EzyEditor.</p><br>
+            <p>If you already have an account follow the link below and log in. If</p>
+            <p>not then follow the link and register with the email adress on which</p>
+            <p>you recieved this email. You will then have access to the document.<br>
             <a href='https://www.student.bth.se/~rois20/editor/#/register'>Click here to join</a>`,
         };
 
