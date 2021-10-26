@@ -13,7 +13,7 @@ const data = {
         // Document to be inserted.
         const doc = {
             _id: newId,
-            type: "documents",
+            type: req.body.type,
             owner: decodedJwt.username,
             allowedUsers: [],
             name: req.body.name,
