@@ -111,7 +111,9 @@ const data = {
 
     generatePdf: async function(req, res) {
         try {
-            const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+            const browser = await puppeteer.launch({
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            });
             const page = await browser.newPage();
 
             await page.setContent(req.body.html);
@@ -124,12 +126,22 @@ const data = {
             res.send(pdfBuffer);
         } catch (error) {
             console.log(error);
+            // Return error specifying the route concerned.
+            return res.status(500).json({
+                errors: {
+                    status: 500,
+                    source: "/generatePdf",
+                    title: "Puppeteer error",
+                    detail: error.message
+                }
+            });
         }
-        
     },
 
     sendInvite(req, res) {
-        const mg = mailgun({apiKey: process.env.MAILGUN_SECRET, domain: process.env.MAILGUN_DOMAIN});
+        const mg = mailgun({
+            apiKey: process.env.MAILGUN_SECRET, domain: process.env.MAILGUN_DOMAIN
+        });
         const data = {
             from: req.body.sender,
             to: req.body.email,
@@ -157,9 +169,9 @@ const data = {
                     title: "Mailgun error",
                     detail: error.message
                 }
-            }); 
+            });
         }
     }
-}
+};
 
 module.exports = data;
