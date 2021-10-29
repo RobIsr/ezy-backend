@@ -131,6 +131,43 @@ describe('Add and update document', () => {
                     });
             });
     });
+
+    it('Inserts documents with correct type', (done) => {
+        // Insert text document
+        chai.request(server)
+            .post('/save')
+            .set({ Authorization: testToken })
+            .send({
+                "type": "text",
+                "name": "test-2",
+                "html": "test"
+            });
+
+        // Insert code document.
+        chai.request(server)
+            .post('/save')
+            .set({ Authorization: testToken })
+            .send({
+                "type": "code",
+                "name": "code-2",
+                "html": "code"
+            }).end(() => {
+                helpers.getAll().then(
+                    (users) => {
+                        const documents = users[0].documents;
+
+                        try {
+                            documents.should.be.an("array");
+                            documents.length.should.be.equal(3);
+                            documents[1].type.should.equal("text");
+                            documents[2].type.should.equal("code");
+                            done();
+                        } catch (error) {
+                            done(error);
+                        }
+                    });
+            });
+    });
 });
 
 describe('Creation of pdf', () => {
