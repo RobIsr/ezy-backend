@@ -1,1 +1,0 @@
-apt-get update && apt-get install libglib2.0-dev libnss3-dev libgdk-pixbuf2.0-dev libgtk-3-dev libxss-dev libasound2
